@@ -185,10 +185,7 @@ def handle_rfid(rfid):
           start_money()
           phone_sock.send(json.dumps(response)+"\n")
           print "Logged in as " + account_manager.username
-          try:
-            money_sock.send("enable\n")
-          except:
-            print "[ERROR] failed to enable the bill acceptor"
+          
         #else invalid rfid tag, or currently logged in as guest
 
 class BadRequest(Exception): pass
@@ -261,7 +258,10 @@ def money_receiver():
     money_sock, address = money_listener.accept() # wait for a connection
     print "Money client connection from ", address
     if account_manager.logged_in():
-      money_sock.send('enable\n')
+      try:
+        money_sock.send("enable\n")
+      except:
+        print "[ERROR] failed to enable the bill acceptor"
     while True: # recieve loop
       try:
         message = money_sock.recv(500).rstrip() # wait for a message
