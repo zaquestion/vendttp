@@ -152,9 +152,18 @@ def refill(vendId):
 ## accounts
 
 def get_account_name(rfid):
-  cur.execute("SELECT account from accounts where rfid =?", (rfid,));
+  cur.execute("SELECT account FROM accounts WHERE rfid = ?", (rfid,));
   return cur.fetchone[0].decode('utf-8');
 
-def get_balanace(rfid):
-  cur.execute("SELECT balanace from accounts where rfid =?", (rfid,));
+def get_balance(rfid):
+  cur.execute("SELECT balance FROM accounts WHERE rfid = ?", (rfid,));
   return cur.fetchone[0].decode('utf-8');
+
+def decrease_balance(rfid, amount):
+  cur.execute("UPDATE accounts SET balance = balance - ?  WHERE rfid = ?", (amount, rfid));
+
+def increase_balance(rfid, amount):
+  cur.execute("UPDATE accounts SET balance = balance + ? WHERE rfid = ?", (amount, rfid));
+
+def create_account(rfid, account):
+  cur.execute("INSERT OR REPLACE INTO accounts VALUES (?, ?, 0.0)", (rfid, account));
