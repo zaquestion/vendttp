@@ -41,7 +41,7 @@ class AccountManager:
       return True
 
   def log_in_guest(self):
-    log_in(self, "000GUEST000")
+    self.log_in(self, "000GUEST000")
 
   def log_out(self):
     self.account_type = AccountManager.NONE
@@ -53,8 +53,8 @@ class AccountManager:
     if not self.logged_in():
       raise NotLoggedInError()
     if self.account_type == AccountManager.SRND:
-      increase_balance(self.rfid, amount);
-      self.balance = get_balance(self.rfid);
+      increase_balance(self.rfid, amount)
+      self.balance = get_balance(self.rfid)
     #If guest
     else:
       self.balance += amount
@@ -65,8 +65,8 @@ class AccountManager:
     if self.balance < amount:
       raise InsufficientFunds()
     if self.account_type == AccountManager.SRND:
-      decrease_balance(self.rfid, amount);
-      self.balance = get_balance(self.rfid);
+      decrease_balance(self.rfid, amount)
+      self.balance = get_balance(self.rfid)
     #If guest
     else:
       self.balance -= amount
