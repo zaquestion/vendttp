@@ -167,12 +167,12 @@ def get_balance(rfid):
 
 def decrease_balance(rfid, amount):
   cur.execute("UPDATE accounts SET balance = balance - ?  WHERE rfid = ?", (amount, rfid))
-  cur.commit()
+  conn.commit()
 
 def increase_balance(rfid, amount):
   cur.execute("UPDATE accounts SET balance = balance + ? WHERE rfid = ?", (amount, rfid))
-  cur.commit()
+  conn.commit()
 
 def create_account(rfid, username):
   cur.execute("INSERT OR REPLACE INTO accounts VALUES (?, ?, 0.0)", (rfid, username))
-  cur.commit()
+  conn.commit()
