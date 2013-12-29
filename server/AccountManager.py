@@ -41,7 +41,7 @@ class AccountManager:
       return True
 
   def log_in_guest(self):
-    log_in("000GUEST000")
+    self.log_in("000GUEST000")
 
   def log_out(self):
     self.account_type = AccountManager.NONE
@@ -49,7 +49,7 @@ class AccountManager:
     self.rfid = None
     self.balance = None
 
-  def deposit(self, amount):
+  def deposit(self, amount): 
     if not self.logged_in():
       raise NotLoggedInError()
     if self.account_type == AccountManager.SRND:
