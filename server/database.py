@@ -163,7 +163,7 @@ def get_balance(rfid):
   value = cur.fetchone()
   if value == None:
     return None
-  return value[0].decode('utf-8')
+  return value[0]
 
 def decrease_balance(rfid, amount):
   cur.execute("UPDATE accounts SET balance = balance - ?  WHERE rfid = ?", (amount, rfid))
