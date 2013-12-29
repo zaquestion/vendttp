@@ -57,7 +57,7 @@ class AccountManager:
       raise NotLoggedInError()
     if self.account_type == AccountManager.SRND:
       increase_balance(self.rfid, amount);
-      self.balance = get_balance();
+      self.balance = get_balance(self.rfid);
     #If guest
     else:
       self.balance += amount
@@ -69,7 +69,7 @@ class AccountManager:
       raise InsufficientFunds()
     if self.account_type == AccountManager.SRND:
       decrease_balance(self.rfid, amount);
-      self.balance = get_balance();
+      self.balance = get_balance(self.rfid);
     #If guest
     else:
       self.balance -= amount
