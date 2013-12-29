@@ -201,8 +201,8 @@ def handle_phone_message(message):
     print "Bad request from phone"
   try:
     if request['type'] == "guest":
-      handle_rfid("000GUEST000")
       print "Logging in as guest"
+      handle_rfid("000GUEST000")
     if request['type'] == "log out":
       log_out()
     elif request['type'] == "vend":
