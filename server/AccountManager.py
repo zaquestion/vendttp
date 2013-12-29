@@ -32,8 +32,8 @@ class AccountManager:
     else:
       self.account_type = AccountManager.SRND
       self.rfid = rfid
-      self.username = database.get_username(rfid)
-      self.balance = database.get_balance(rfid)
+      self.username = get_username(rfid)
+      self.balance = get_balance(rfid)
       return True
 
   def log_in_guest(self):
@@ -52,8 +52,8 @@ class AccountManager:
     if not self.logged_in():
       raise NotLoggedInError()
     if self.account_type == AccountManager.SRND:
-      database.increase_balance(self.rfid, amount);
-      self.balance = database.get_balance();
+      increase_balance(self.rfid, amount);
+      self.balance = get_balance();
     #If guest
     else:
       self.balance += amount
@@ -64,8 +64,8 @@ class AccountManager:
     if self.balance < amount:
       raise InsufficientFunds()
     if self.account_type == AccountManager.SRND:
-      database.decrease_balance(self.rfid, amount);
-      self.balance = database.get_balance();
+      decrease_balance(self.rfid, amount);
+      self.balance = get_balance();
     #If guest
     else:
       self.balance -= amount
