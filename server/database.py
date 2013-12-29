@@ -40,7 +40,7 @@ def connect():
                   depth INTEGER)''')
   cur.execute('''CREATE TABLE IF NOT EXISTS accounts
                  (rfid TEXT PRIMARY KEY,
-                  account TEXT,
+                  username TEXT,
                   balance REAL)''')
   conn.commit()
 
@@ -152,18 +152,18 @@ def refill(vendId):
 ## accounts
 
 def get_account_name(rfid):
-  cur.execute("SELECT account FROM accounts WHERE rfid = ?", (rfid,));
-  return cur.fetchone[0].decode('utf-8');
+  cur.execute("SELECT username FROM accounts WHERE rfid = ?", (rfid,))
+  return cur.fetchone[0].decode('utf-8')
 
 def get_balance(rfid):
-  cur.execute("SELECT balance FROM accounts WHERE rfid = ?", (rfid,));
-  return cur.fetchone[0].decode('utf-8');
+  cur.execute("SELECT balance FROM accounts WHERE rfid = ?", (rfid,))
+  return cur.fetchone[0].decode('utf-8')
 
 def decrease_balance(rfid, amount):
-  cur.execute("UPDATE accounts SET balance = balance - ?  WHERE rfid = ?", (amount, rfid));
+  cur.execute("UPDATE accounts SET balance = balance - ?  WHERE rfid = ?", (amount, rfid))
 
 def increase_balance(rfid, amount):
-  cur.execute("UPDATE accounts SET balance = balance + ? WHERE rfid = ?", (amount, rfid));
+  cur.execute("UPDATE accounts SET balance = balance + ? WHERE rfid = ?", (amount, rfid))
 
-def create_account(rfid, account):
-  cur.execute("INSERT OR REPLACE INTO accounts VALUES (?, ?, 0.0)", (rfid, account));
+def create_account(rfid, username):
+  cur.execute("INSERT OR REPLACE INTO accounts VALUES (?, ?, 0.0)", (rfid, username))
