@@ -153,11 +153,17 @@ def refill(vendId):
 
 def get_username(rfid):
   cur.execute("SELECT username FROM accounts WHERE rfid = ?", (rfid,))
-  return cur.fetchone[0].decode('utf-8')
+  value = cur.fetchone()
+  if value == None:
+    return None
+  return value[0].decode('utf-8')
 
 def get_balance(rfid):
   cur.execute("SELECT balance FROM accounts WHERE rfid = ?", (rfid,))
-  return cur.fetchone[0].decode('utf-8')
+    value = cur.fetchone()
+  if value == None:
+    return None
+  return value[0].decode('utf-8')
 
 def decrease_balance(rfid, amount):
   cur.execute("UPDATE accounts SET balance = balance - ?  WHERE rfid = ?", (amount, rfid))

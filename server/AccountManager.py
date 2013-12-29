@@ -13,7 +13,7 @@ class AccountManager:
 
   def logged_in(self):
     return bool(self.account_type)
-  
+
   def __init__(self):
     self.account_type = AccountManager.NONE
     self.username = None
@@ -33,6 +33,10 @@ class AccountManager:
       self.account_type = AccountManager.SRND
       self.rfid = rfid
       self.username = get_username(rfid)
+      if self.username == None:
+        print "Invalid credentials"
+        print "RFID = " + rfid;
+        return False;
       self.balance = get_balance(rfid)
       return True
 
