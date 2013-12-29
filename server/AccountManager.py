@@ -1,6 +1,7 @@
 from util import get, make_creds, URLOpenError, JSONDecodeError, \
                  InsufficientFunds
 from util import settings
+from database import get_username, get_balance, decrease_balance, increase_balance
 
 class NotLoggedInError(Exception): pass
 
@@ -29,34 +30,10 @@ class AccountManager:
       self.balance = settings.TESTING_BALANCE
       return True
     else:
-      try:
-        response = get("http://my.studentrnd.org/api/user/rfid",
-                       {'rfid' : rfid})
-      except URLOpenError as e:
-        print "[Error] Could not connect to http://my.studentrnd.org/"
-        return False
-      except JSONDecodeError:
-        print "Unknown RFID tag: %s" % rfid
-        return False
       self.account_type = AccountManager.SRND
-      self.username = response['username']
       self.rfid = rfid
-      
-      url  = "http://my.studentrnd.org/api/balance"
-      app_id, curtime, rand, sig = make_creds()
-      data = {"application_id": app_id,
-              "time": curtime,
-              "nonce": rand,
-              "username": self.username,
-              "signature": sig}
-      try:
-        self.balance = get(url, data)['balance']
-      except URLOpenError as e:
-        print "[Error] Could not connect to http://my.studentrnd.org/"
-        return False
-      except ValueError:
-        print "Invalid credentials"
-        return False
+      self.username = database.get_username(rfid)
+      self.balance = database.get_balance(rfid)
       return True
 
   def log_in_guest(self):
@@ -75,18 +52,9 @@ class AccountManager:
     if not self.logged_in():
       raise NotLoggedInError()
     if self.account_type == AccountManager.SRND:
-      app_id, curtime, rand, sig = make_creds()
-      url = "http://my.studentrnd.org/api/balance/eft"
-      get_data = {"application_id" : app_id,
-             "time" : curtime,
-             "nonce" : rand,
-             "username" : self.username,
-             "signature" : sig}
-      post_data = {'username' : self.username,
-                   'amount': amount,
-                   'description': "vending machine deposit",
-                   'type': 'deposit'}
-      self.balance = get(url, get_data, post_data)['balance']
+      database.increase_balance(self.rfid, amount);
+      self.balance = database.get_balance();
+    #If guest
     else:
       self.balance += amount
 
@@ -96,18 +64,8 @@ class AccountManager:
     if self.balance < amount:
       raise InsufficientFunds()
     if self.account_type == AccountManager.SRND:
-      app_id, curtime, rand, sig = make_creds()
-      url = "http://my.studentrnd.org/api/balance/eft"
-      get_data = {"application_id" : app_id,
-                  "time" : curtime,
-                  "nonce" : rand,
-                  "username" : self.username,
-                  "signature" : sig}
-      post_data = {'username' : self.username,
-                   'amount': amount,
-                   'description': descript,
-                   'type' : 'withdrawl'}
-      response = get(url, get_data, post_data)
-      self.balance = response['balance']
+      database.decrease_balance(self.rfid, amount);
+      self.balance = database.get_balance();
+    #If guest
     else:
       self.balance -= amount
