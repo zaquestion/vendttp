@@ -38,6 +38,10 @@ def connect():
   cur.execute('''CREATE TABLE IF NOT EXISTS depths
                  (vendId INTEGER PRIMARY KEY,
                   depth INTEGER)''')
+  cur.execute('''CREATE TABLE IF NOT EXISTS accounts
+                 (rfid TEXT PRIMARY KEY,
+                  account TEXT,
+                  balance REAL)''')
   conn.commit()
 
 def disconnect():
@@ -144,3 +148,13 @@ def refill(vendId):
   cur.execute("UPDATE items SET quantity = " + \
               "( SELECT depths.depth WHERE vendId == items.vendId )" + \
               "WHERE vendId == ?", (vendId,))
+
+## accounts
+
+def get_account_name(rfid):
+  cur.execute("SELECT account from accounts where rfid =?", (rfid,));
+  return cur.fetchone[0].decode('utf-8');
+
+def get_balanace(rfid):
+  cur.execute("SELECT balanace from accounts where rfid =?", (rfid,));
+  return cur.fetchone[0].decode('utf-8');
