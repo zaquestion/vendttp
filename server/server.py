@@ -362,7 +362,10 @@ def rfid_receiver():
       if phone_sock:
         if rfid == account_manager.rfid:
           if print_relogin_message:
-            print "Already logged in as " + account_manager.username
+            if account_manager.username == None:
+              print "Trying to log in as None"
+            else:
+              print "Already logged in as " + account_manager.username
             print_relogin_message = False
           continue
         handle_rfid(rfid)
