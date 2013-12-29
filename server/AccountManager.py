@@ -35,8 +35,8 @@ class AccountManager:
       self.username = get_username(rfid)
       if self.username == None:
         print "Invalid credentials"
-        print "RFID = " + rfid;
-        return False;
+        print "RFID = " + rfid
+        return False
       self.balance = get_balance(rfid)
       return True
 
