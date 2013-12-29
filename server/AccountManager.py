@@ -30,13 +30,13 @@ class AccountManager:
       self.balance = settings.TESTING_BALANCE
       return True
     else:
-      self.account_type = AccountManager.SRND
       self.rfid = rfid
       self.username = get_username(rfid)
       if self.username == None:
         print "Invalid credentials"
         print "RFID = " + rfid
         return False
+      self.account_type = AccountManager.SRND
       self.balance = get_balance(rfid)
       return True
 
