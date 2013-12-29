@@ -151,7 +151,7 @@ def refill(vendId):
 
 ## accounts
 
-def get_account_name(rfid):
+def get_username(rfid):
   cur.execute("SELECT username FROM accounts WHERE rfid = ?", (rfid,))
   return cur.fetchone[0].decode('utf-8')
 
