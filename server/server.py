@@ -175,6 +175,21 @@ def send_vend_failure(reason, vendId):
                               'reason' : reason,
                               'vendId' : vendId})+"\n")
 
+def handle_rfid(rfid):
+  if account_manager.log_in(rfid):
+          print_relogin_message = True
+          response  = {"type" : "log in",
+                       "username" : account_manager.username,
+                       "balance" : account_manager.balance}
+          start_money()
+          phone_sock.send(json.dumps(response)+"\n")
+          print "Logged in as " + account_manager.username
+          try:
+            money_sock.send("enable\n")
+          except:
+            print "[ERROR] failed to enable the bill acceptor"
+        #else invalid rfid tag, or currently logged in as guest
+
 class BadRequest(Exception): pass
 def handle_phone_message(message):
   try:
@@ -186,8 +201,7 @@ def handle_phone_message(message):
     print "Bad request from phone"
   try:
     if request['type'] == "guest":
-      account_manager.log_in_guest()
-      start_money()
+      handle_rfid("000GUEST000")
       print "Logging in as guest"
     if request['type'] == "log out":
       log_out()
@@ -350,19 +364,7 @@ def rfid_receiver():
             print "Already logged in as " + account_manager.username
             print_relogin_message = False
           continue
-        if account_manager.log_in(rfid):
-          print_relogin_message = True
-          response  = {"type" : "log in",
-                       "username" : account_manager.username,
-                       "balance" : account_manager.balance}
-          start_money()
-          phone_sock.send(json.dumps(response)+"\n")
-          print "Logged in as " + account_manager.username
-          try:
-            money_sock.send("enable\n")
-          except:
-            print "[ERROR] failed to enable the bill acceptor"
-        #else invalid rfid tag, or currently logged in as guest
+        handle_rfid(rfid)
       #else not connected to client
     print "Disconnected from RFID scanner."
 
