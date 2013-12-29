@@ -153,6 +153,7 @@ def refill(vendId):
 
 def get_username(rfid):
   cur.execute("SELECT username FROM accounts WHERE rfid = ?", (rfid,))
+  print("poop")
   value = cur.fetchone()
   if value == None:
     return None
