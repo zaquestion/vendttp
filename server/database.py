@@ -160,7 +160,7 @@ def get_username(rfid):
 
 def get_balance(rfid):
   cur.execute("SELECT balance FROM accounts WHERE rfid = ?", (rfid,))
-    value = cur.fetchone()
+  value = cur.fetchone()
   if value == None:
     return None
   return value[0].decode('utf-8')
