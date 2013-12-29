@@ -41,10 +41,7 @@ class AccountManager:
       return True
 
   def log_in_guest(self):
-    self.account_type = AccountManager.GUEST
-    self.username = "Guest"
-    self.rfid = None
-    self.balance = 0
+    log_in(self, "000GUEST000")
 
   def log_out(self):
     self.account_type = AccountManager.NONE
