@@ -41,7 +41,7 @@ class AccountManager:
       return True
 
   def log_in_guest(self):
-    self.log_in(self, "000GUEST000")
+    log_in("000GUEST000")
 
   def log_out(self):
     self.account_type = AccountManager.NONE
