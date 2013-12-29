@@ -176,6 +176,7 @@ def send_vend_failure(reason, vendId):
                               'vendId' : vendId})+"\n")
 
 def handle_rfid(rfid):
+  global money_sock
   if account_manager.log_in(rfid):
           print_relogin_message = True
           response  = {"type" : "log in",
