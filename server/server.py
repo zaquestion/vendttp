@@ -176,7 +176,7 @@ def send_vend_failure(reason, vendId):
                               'vendId' : vendId})+"\n")
 
 def handle_rfid(rfid):
-  global money_sock
+  global money_sock, print_relogin_message, phone_sock
   if account_manager.log_in(rfid):
           print_relogin_message = True
           response  = {"type" : "log in",
@@ -304,7 +304,7 @@ def accept_money(amount):
 #listen to rfid scanner
 def rfid_receiver():
   global phone_sock, money_sock, rfid_serial, rfid_device, dispenser_device, \
-         rfid_listener, rfid_sock
+         rfid_listener, rfid_sock, print_relogin_message
   while True:
 
     # a real rfid scanner
