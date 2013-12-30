@@ -35,7 +35,7 @@
         <TextBlock Name="CurrentUserBox" FontSize="{StaticResource PhoneFontSizeLarge}" Margin="0,0,160,0" Text="No Login" TextAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
         <Button Name="connectButton" Content="Connect" Height="72" HorizontalAlignment="Right" Width="160" Click="connect_Click" Visibility="Visible"/>
         <Button Name="logoutButton" Content="Log Out" Height="72" HorizontalAlignment="Right" Width="160" Click="logout_Click" Visibility="Collapsed"/>
-        <TextBox Name="hostBox" InputScope="Number" Height="72" HorizontalAlignment="Left" Text="10.1.0." VerticalAlignment="Top" Width="314" Visibility="Visible"/>
+        <TextBox Name="hostBox" InputScope="Number" Height="72" HorizontalAlignment="Left" Text="192.168.1." VerticalAlignment="Top" Width="314" Visibility="Visible"/>
 
         <Grid Grid.Row="1" Name="Instructions" Visibility="Collapsed">
             <Grid.RowDefinitions>

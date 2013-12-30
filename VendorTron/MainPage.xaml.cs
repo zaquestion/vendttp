@@ -217,7 +217,7 @@ namespace VendorTron
             client.guest();
             Dispatcher.BeginInvoke(() => {
                 Instructions.Visibility = Visibility.Collapsed;
-                logoutButton.Content = "Donate";
+                logoutButton.Content = "Log Out";
             });
         }
 
