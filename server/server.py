@@ -348,6 +348,7 @@ def rfid_receiver():
           rfid_serial.flushInput()
           rfid = rfid_serial.read(12).strip()
         except serial.SerialException:
+          print "serial.SerialException"
           break
         
       else: # emulated
@@ -360,6 +361,7 @@ def rfid_receiver():
 
       #handle rfid tag
       if phone_sock:
+        print "In 'if phone_sock'"
         if rfid == account_manager.rfid:
           if print_relogin_message:
             if account_manager.username == None:
@@ -368,6 +370,7 @@ def rfid_receiver():
               print "Already logged in as " + account_manager.username
             print_relogin_message = False
           continue
+        print "handle_rfid next line"
         handle_rfid(rfid)
       #else not connected to client
     print "Disconnected from RFID scanner."
