@@ -37,6 +37,10 @@ namespace VendorTron
         {
             InitializeComponent();
 
+            HttpWebRequest request = HttpWebRequest.CreateHttp("http://engine.mobileapptracking.com//serve?action=session&advertiser_id=14664&site_id=50896&device_id=VendorTronWindowsPhone");
+            request.BeginGetResponse(ResponseCallBack, request);
+
+
             client = new SocketClient();
             client.OnLogin(login);
             client.OnBalance(updateBalance);
@@ -198,6 +202,9 @@ namespace VendorTron
 
             client.buy(item);
 
+            HttpWebRequest request = HttpWebRequest.CreateHttp("http://engine.mobileapptracking.com/serve?action=conversion&site_event_name=Purchase&advertiser_id=14664&site_id=50896&device_id=VendorTronWindowsPhone&user_id=" + CurrentUserBox.Text + "&site_event_items=%5B%7B%22item%22%3A%22" + item.name + "%22%2C%22unit_price%22%3A%22" + item.price + "%22%2C%22quantity%22%3A%221%22%7D%5D");
+            request.BeginGetResponse(ResponseCallBack, request);
+            
             inventoryView();
             client.Touch();
         }
@@ -317,5 +324,24 @@ namespace VendorTron
             client.Touch();
         }
 
+        private void ResponseCallBack(IAsyncResult result)
+        {
+            var request = result.AsyncState as HttpWebRequest;
+
+            if (request != null)
+            {
+                try
+                {
+                    WebResponse response = request.EndGetResponse(result);
+                    Debug.WriteLine(response.ContentLength);
+                    StreamReader sr = new StreamReader(response.GetResponseStream());
+                    Debug.WriteLine(sr.ReadToEnd());
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("something went wrong 'duh' with the the webrequest... well one of them");
+                }
+            }
+        }
     }
 }
