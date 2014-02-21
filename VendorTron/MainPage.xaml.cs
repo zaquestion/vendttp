@@ -31,6 +31,7 @@ namespace VendorTron
         static SolidColorBrush Red = new SolidColorBrush(Colors.Red);
         static SolidColorBrush White = new SolidColorBrush(Colors.White);
         Item Item;
+        Category currentCatagory;
 
         // Constructor
         public MainPage()
@@ -176,6 +177,7 @@ namespace VendorTron
         {
             Button source = e.OriginalSource as Button;
             Category category = source.DataContext as Category;
+            currentCatagory = category;
 
             if (category == null || category.items == null || category.items.Count == 0)
                 return;
@@ -189,6 +191,8 @@ namespace VendorTron
                 itemList.Visibility = Visibility.Visible;
                 backButton.Visibility = Visibility.Visible;
             });
+
+
             client.Touch();
         }
 
@@ -197,12 +201,21 @@ namespace VendorTron
             Button source = e.OriginalSource as Button;
             Item item = source.DataContext as Item;
 
+            string catagoryName = String.Empty;
+
             if (item == null)
-                return;
+            {
+               return;
+            }
+
+            if(currentCatagory != null)
+            {
+                catagoryName = currentCatagory.name;
+            }
 
             client.buy(item);
 
-            HttpWebRequest request = HttpWebRequest.CreateHttp("http://engine.mobileapptracking.com/serve?action=conversion&site_event_name=Purchase&advertiser_id=14664&site_id=50896&device_id=VendorTronWindowsPhone&user_id=" + CurrentUserBox.Text + "&site_event_items=%5B%7B%22item%22%3A%22" + item.name + "%22%2C%22unit_price%22%3A%22" + item.price + "%22%2C%22quantity%22%3A%221%22%7D%5D");
+            HttpWebRequest request = HttpWebRequest.CreateHttp("http://engine.mobileapptracking.com/serve?action=conversion&site_event_name=Purchase&advertiser_id=14664&site_id=50896&device_id=VendorTronWindowsPhone&user_id=" + CurrentUserBox.Text + "&site_event_items=%5B%7B%22item%22%3A%22"+ catagoryName + "%3A " + item.name + "%22%2C%22unit_price%22%3A%22" + item.price + "%22%2C%22quantity%22%3A%221%22%7D%5D");
             request.BeginGetResponse(ResponseCallBack, request);
             
             inventoryView();
