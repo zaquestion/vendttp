@@ -374,6 +374,7 @@ def rfid_receiver():
         handle_rfid(rfid)
       #else not connected to client
     print "Disconnected from RFID scanner."
+    sys.exit(1)
 
 def make_item(vendId, price, quantity, name):
   return {"vendId" : str(vendId).zfill(2),

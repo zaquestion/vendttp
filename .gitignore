@@ -122,3 +122,4 @@ $RECYCLE.BIN/
 .*
 !.gitignore
 *~
+server/log.txt
