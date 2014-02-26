@@ -349,6 +349,7 @@ def rfid_receiver():
           rfid = rfid_serial.read(12).strip()
         except serial.SerialException:
           print "serial.SerialException"
+          sys.exit(1)
           break
         
       else: # emulated
