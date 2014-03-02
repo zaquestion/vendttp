@@ -349,7 +349,8 @@ def rfid_receiver():
           rfid = rfid_serial.read(12).strip()
         except serial.SerialException:
           print "serial.SerialException"
-          sys.exit(1)
+          print "exiting"
+          os._exit(1)
           break
         
       else: # emulated
@@ -429,6 +430,7 @@ def dispenser_controller():
         if len(dispenser_serial.read(512)) == 0:
           break
       except:
+        os._exit(1)
         break
       time.sleep(3)
 

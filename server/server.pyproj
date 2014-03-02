@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9b7067fb-12a2-4c03-98d5-cca526d167ad}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>C:\Users\Zachary\Documents\GitHub\vendttp\server\server.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Compile Include="AccountManager.py" />
+    <Compile Include="admin.py" />
+    <Compile Include="BabySitter.py" />
+    <Compile Include="credentials_default.py" />
+    <Compile Include="database.py" />
+    <Compile Include="dummy_phone_client.py" />
+    <Compile Include="money_client_emulator.py" />
+    <Compile Include="rfid_scanner_emulator.py" />
+    <Compile Include="server.py" />
+    <Compile Include="settings_default.py" />
+    <Compile Include="ThreadSafeFile.py" />
+    <Compile Include="util.py" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+</Project>
