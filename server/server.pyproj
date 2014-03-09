@@ -18,6 +18,7 @@
     <Compile Include="AccountManager.py" />
     <Compile Include="admin.py" />
     <Compile Include="BabySitter.py" />
+    <Compile Include="CloseableThread.py" />
     <Compile Include="credentials_default.py" />
     <Compile Include="database.py" />
     <Compile Include="dummy_phone_client.py" />
