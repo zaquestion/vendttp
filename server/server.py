@@ -4,9 +4,10 @@ if __name__ == '__main__': print "Loading..."
 ######## IMPORTS ########
 
 # system imports
-import atexit, codecs, json, os, socket, subprocess, sys, threading, time
+import atexit, codecs, json, os, socket, subprocess, sys, time
 # local imports
 import database
+from CloseableThread import CloseableThread
 from AccountManager import AccountManager
 from util import settings, credentials, \
                  SoldOut, BadItem, InsufficientFunds, \
@@ -137,6 +138,13 @@ def sanitize_chr(c):
 def sanitize(string):
   return ''.join(map(sanitize_chr, string))
 
+def StopThreads():
+    print("StopThreads called")
+    money_thread.stop()
+    phone_thread.stop()
+    rfid_thread.stop()
+    dispenser_thread.stop()
+
 def exit_handler():
   money_thread._Thread__stop()
   if money_process:
@@ -151,12 +159,12 @@ def exit_handler():
 # listen to phone
 def phone_receiver():
   global phone_sock
-  while True:
+  while phone_thread.running:
     # connection
     print "Waiting for phone client"
     phone_sock, address = phone_listener.accept()
     print "Phone client connected from ", address
-    while True:
+    while phone_thread.running:
       # wait for message
       try:
         message = phone_sock.recv(512).rstrip()
@@ -167,6 +175,8 @@ def phone_receiver():
       handle_phone_message(message)
     #if program is here, phone client has disconnected
     print "Phone client disconnected"
+    phone_sock.shutdown()
+    phone_sock.close()
     phone_sock = None
     account_manager.log_out()
 
@@ -253,7 +263,7 @@ def log_out():
 # listen to money controller
 def money_receiver():
   global money_listener, money_sock
-  while True: # main loop
+  while money_thread.running: # main loop
     print "Waiting for money controller"
     money_sock, address = money_listener.accept() # wait for a connection
     print "Money client connection from ", address
@@ -262,7 +272,7 @@ def money_receiver():
         money_sock.send("enable\n")
       except:
         print "[ERROR] failed to enable the bill acceptor"
-    while True: # recieve loop
+    while money_thread.running: # recieve loop
       try:
         message = money_sock.recv(500).rstrip() # wait for a message
         if len(message) == 0: # disconnected
@@ -305,7 +315,7 @@ def accept_money(amount):
 def rfid_receiver():
   global phone_sock, money_sock, rfid_serial, rfid_device, dispenser_device, \
          rfid_listener, rfid_sock, print_relogin_message
-  while True:
+  while rfid_thread.running:
 
     # a real rfid scanner
     if settings.RFID_SCANNER == NORMAL:
@@ -341,7 +351,7 @@ def rfid_receiver():
       rfid_sock, address = rfid_listener.accept()
       print "RFID Scanner emulator client connected from ", address
     
-    while True:
+    while rfid_thread.running:
 
       if settings.RFID_SCANNER == NORMAL:
         try:
@@ -350,7 +360,7 @@ def rfid_receiver():
         except serial.SerialException:
           print "serial.SerialException"
           print "exiting"
-          os._exit(1)
+          StopThreads()
           break
         
       else: # emulated
@@ -405,7 +415,7 @@ def send_inventory(key):
 # It is not run if settings.DISPENSER == EMULATE
 def dispenser_controller():
   global dispenser_serial, rfid_device, dispenser_device
-  while True:
+  while dispenser_thread.running:
     if settings.DISPENSER_COMPORT:
       print "Waiting for vending machine controller"
       dispenser_serial = get_serial(settings.DISPENSER_COMPORT)
@@ -425,12 +435,12 @@ def dispenser_controller():
             continue
     print "Connected to vending machine controller"
 
-    while True:
+    while dispenser_thread.running:
       try:
         if len(dispenser_serial.read(512)) == 0:
           break
       except:
-        os._exit(1)
+        StopThreads()
         break
       time.sleep(3)
 
@@ -462,10 +472,10 @@ def main():
   account_manager = AccountManager()
   database.connect()
 
-  money_thread = threading.Thread(target = money_receiver)
-  phone_thread = threading.Thread(target = phone_receiver)
-  rfid_thread = threading.Thread(target = rfid_receiver)
-  dispenser_thread = threading.Thread(target = dispenser_controller)
+  money_thread = CloseableThread(target = money_receiver)
+  phone_thread = CloseableThread(target = phone_receiver)
+  rfid_thread = CloseableThread(target = rfid_receiver)
+  dispenser_thread = CloseableThread(target = dispenser_controller)
 
   money_thread.start()
   phone_thread.start()
